@@ -1,20 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar, LogBox } from 'react-native'
+import { NativeBaseProvider, Text } from 'native-base'
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_700Bold,
+} from '@expo-google-fonts/roboto'
+import { THEME } from './src/theme'
+import { useEffect } from 'react'
+import { Routes } from './src/routes'
+import { ListaDesejosProvider } from './src/context/listaDesejosContext'
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [fontsLoaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_700Bold,
+  })
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  // ignorando erro
+  useEffect(() => {
+    LogBox.ignoreLogs([
+      'In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.',
+    ])
+  }, [])
+
+  return (
+    <NativeBaseProvider theme={THEME}>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      <ListaDesejosProvider>
+        {fontsLoaded ? <Routes /> : <Text>Carregando...</Text>}
+      </ListaDesejosProvider>
+    </NativeBaseProvider>
+  )
+}
