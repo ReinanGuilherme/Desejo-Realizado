@@ -4,7 +4,7 @@ import { createContext, ReactNode, useState } from 'react'
 interface Desejo {
   id: number
   nome: string
-  descricao: string
+  valor: string
   urlImg: string
 }
 
