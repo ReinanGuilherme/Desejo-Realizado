@@ -10,7 +10,7 @@ export function Header({ titulo }: Props) {
     <Heading
       color="white"
       textAlign="center"
-      pt={20}
+      pt={16}
       pb={10}
       bg="gray.500"
       mb={5}

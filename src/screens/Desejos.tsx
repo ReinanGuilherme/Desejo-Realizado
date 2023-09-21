@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Text, VStack } from 'native-base'
+import { Center, Image, ScrollView, Text, VStack } from 'native-base'
 import { Header } from '../components/Header'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import {
@@ -8,6 +8,8 @@ import {
 } from '../context/listaDesejosContext'
 import { Button } from '../components/Button'
 import { Input } from '../components/Input'
+import { TouchableOpacity } from 'react-native'
+import * as ImagePicker from 'expo-image-picker'
 
 export function Desejos() {
   const route: RouteProp<{ params: { desejoId: number } }> = useRoute()
@@ -18,13 +20,30 @@ export function Desejos() {
     {} as ListaDesejos,
   )
 
+  const [urlImagem, setUrlImagem] = useState('')
+
+  async function handleSelecionarImagem() {
+    const imagemSelecionada = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+      aspect: [4, 4],
+      allowsEditing: true,
+    })
+
+    if (imagemSelecionada.canceled) {
+      return
+    }
+
+    setUrlImagem(imagemSelecionada.assets[0].uri)
+  }
+
   useEffect(() => {
     const listaDesejo = listasDesejos.find((lista) => lista.id === desejoId)
     setLista(listaDesejo)
   }, [listasDesejos, desejoId])
 
   return (
-    <VStack>
+    <ScrollView>
       <Header titulo={lista?.nome || 'Nome Padrão'} />
 
       <VStack px={2}>
@@ -38,13 +57,29 @@ export function Desejos() {
         </Text>
         <Input placeholder="Ex: R$ 100,00" />
 
-        <Text color="white" fontSize="lg" mb="2">
-          URL Imagem:
-        </Text>
-        <Input placeholder="Ex: https://minhaimagem.com" />
+        <TouchableOpacity onPress={handleSelecionarImagem}>
+          <Text color="green.500" mb={4} fontSize="lg">
+            Selecionar uma imagem
+          </Text>
+        </TouchableOpacity>
+        <Center>
+          {urlImagem && (
+            <Image
+              source={{
+                uri: urlImagem,
+              }}
+              alt="Imagem do exercício"
+              w="40"
+              h={40}
+              rounded="md"
+              mb={4}
+              resizeMode="center"
+            />
+          )}
+        </Center>
 
         <Button title="Adicionar Desejo" />
       </VStack>
-    </VStack>
+    </ScrollView>
   )
 }
