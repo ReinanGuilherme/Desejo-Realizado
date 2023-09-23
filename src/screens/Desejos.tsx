@@ -12,15 +12,27 @@ import { TouchableOpacity } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 
 export function Desejos() {
-  const route: RouteProp<{ params: { desejoId: number } }> = useRoute()
-  const desejoId = route.params?.desejoId
-  const { listasDesejos } = useContext(ListaDesejosContext)
+  const route: RouteProp<{ params: { listaId: number } }> = useRoute()
+  const listaId = route.params?.listaId
+
+  const { handleBuscarLista, handleAdicionarDesejoALista, handleMontarDesejo } =
+    useContext(ListaDesejosContext)
 
   const [lista, setLista] = useState<ListaDesejos | undefined>(
     {} as ListaDesejos,
   )
 
+  const [desejo, setDesejo] = useState('')
+  const [valor, setValor] = useState('')
   const [urlImagem, setUrlImagem] = useState('')
+
+  function handleDesejoTextChange(text: string) {
+    setDesejo(text)
+  }
+
+  function handleValorTextChange(text: string) {
+    setValor(text)
+  }
 
   async function handleSelecionarImagem() {
     const imagemSelecionada = await ImagePicker.launchImageLibraryAsync({
@@ -37,25 +49,45 @@ export function Desejos() {
     setUrlImagem(imagemSelecionada.assets[0].uri)
   }
 
+  function handleAdicionarDesejo() {
+    const objDesejo = handleMontarDesejo(desejo, parseFloat(valor), urlImagem)
+
+    handleAdicionarDesejoALista(listaId, objDesejo)
+
+    // limpando campos
+    setDesejo('')
+    setValor('')
+    setUrlImagem('')
+  }
+
+  // capturando a lista referencia para a tela
   useEffect(() => {
-    const listaDesejo = listasDesejos.find((lista) => lista.id === desejoId)
-    setLista(listaDesejo)
-  }, [listasDesejos, desejoId])
+    setLista(handleBuscarLista(listaId))
+  }, [listaId, handleBuscarLista])
 
   return (
     <ScrollView>
-      <Header titulo={lista?.nome || 'Nome Padrão'} />
+      <Header titulo={lista?.nome || ''} />
 
       <VStack px={2}>
         <Text color="white" fontSize="lg" mb="2">
           Desejo:
         </Text>
-        <Input placeholder="Ex: Geladeira" />
+        <Input
+          value={desejo}
+          placeholder="Ex: Geladeira"
+          onChangeText={handleDesejoTextChange}
+        />
 
         <Text color="white" fontSize="lg" mb="2">
           Valor:
         </Text>
-        <Input placeholder="Ex: R$ 100,00" />
+        <Input
+          placeholder="Ex: R$ 100,00"
+          value={valor.toString()}
+          onChangeText={handleValorTextChange}
+          keyboardType="numeric"
+        />
 
         <TouchableOpacity onPress={handleSelecionarImagem}>
           <Text color="green.500" mb={4} fontSize="lg">
@@ -68,7 +100,7 @@ export function Desejos() {
               source={{
                 uri: urlImagem,
               }}
-              alt="Imagem do exercício"
+              alt=""
               w="40"
               h={40}
               rounded="md"
@@ -78,7 +110,7 @@ export function Desejos() {
           )}
         </Center>
 
-        <Button title="Adicionar Desejo" />
+        <Button title="Adicionar Desejo" onPress={handleAdicionarDesejo} />
       </VStack>
     </ScrollView>
   )

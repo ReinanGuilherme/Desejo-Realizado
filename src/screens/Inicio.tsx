@@ -20,13 +20,13 @@ export function Inicio() {
   function handleAdicionarLista() {
     const id = handleAdicionarNovaLista(nomeLista)
 
-    navigation.navigate('desejos', { desejoId: id })
+    navigation.navigate('desejos', { listaId: id })
   }
 
   return (
     <VStack flex={1} justifyContent="center">
       <Heading color="white" textAlign="center" mb="10">
-        Salva sua lista de desejos.
+        Crie sua lista de desejos.
       </Heading>
 
       <VStack px="2">

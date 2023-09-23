@@ -1,10 +1,11 @@
 import { createContext, ReactNode, useState } from 'react'
+import uuid from 'react-native-uuid'
 
 // Interfaces
 interface Desejo {
-  id: number
-  nome: string
-  valor: string
+  id: string
+  descricao: string
+  valor: number
   urlImg: string
 }
 
@@ -16,7 +17,10 @@ export interface ListaDesejos {
 
 interface ListaDesejosContextType {
   listasDesejos: ListaDesejos[]
+  handleBuscarLista: (listaId: number) => ListaDesejos | undefined
   handleAdicionarNovaLista: (nomeLista: string) => number
+  handleAdicionarDesejoALista: (listaId: number, desejo: Desejo) => void
+  handleMontarDesejo: (nome: string, valor: number, urlImagem: string) => Desejo
 }
 
 interface ListaDesejosProviderProps {
@@ -43,9 +47,50 @@ export function ListaDesejosProvider({ children }: ListaDesejosProviderProps) {
     return id
   }
 
+  function handleBuscarLista(listaId: number) {
+    const lista = listasDesejos.find((lista) => lista.id === listaId)
+    return lista
+  }
+
+  function handleAdicionarDesejoALista(listaId: number, desejo: Desejo) {
+    setListasDesejos((state) => {
+      return state.map((lista) => {
+        if (lista.id === listaId) {
+          // Encontrou a lista correta, adiciona o desejo a essa lista
+          return {
+            ...lista,
+            desejos: [...lista.desejos, desejo],
+          }
+        }
+        return lista // Retorna as outras listas inalteradas
+      })
+    })
+  }
+
+  function handleMontarDesejo(
+    descricao: string,
+    valor: number,
+    urlImagem: string,
+  ) {
+    const desejo: Desejo = {
+      id: uuid.v4().toString(),
+      descricao,
+      valor,
+      urlImg: urlImagem,
+    }
+
+    return desejo
+  }
+
   return (
     <ListaDesejosContext.Provider
-      value={{ listasDesejos, handleAdicionarNovaLista }}
+      value={{
+        listasDesejos,
+        handleAdicionarNovaLista,
+        handleBuscarLista,
+        handleAdicionarDesejoALista,
+        handleMontarDesejo,
+      }}
     >
       {children}
     </ListaDesejosContext.Provider>

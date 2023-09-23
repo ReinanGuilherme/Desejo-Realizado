@@ -11,11 +11,13 @@ import InicioSvg from '../assets/inicio.svg'
 import DesejoSvg from '../assets/desejo.svg'
 import { ListasDesejos } from '../screens/ListasDesejos'
 import { Desejos } from '../screens/Desejos'
+import { Lista } from '../screens/Lista'
 
 type AppRoutes = {
   inicio: undefined
-  desejos: { desejoId: number }
+  desejos: { listaId: number }
   listasDesejos: undefined
+  lista: { listaId: number }
 }
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>
@@ -59,6 +61,14 @@ export function AppRoutes() {
           tabBarIcon: ({ color }) => (
             <DesejoSvg fill={color} width={iconSize} height={iconSize} />
           ),
+        }}
+      />
+
+      <Screen
+        name="lista"
+        component={Lista}
+        options={{
+          tabBarButton: () => null,
         }}
       />
 

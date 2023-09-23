@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FlatList, VStack } from 'native-base'
 import { ListaDesejosContext } from '../context/listaDesejosContext'
 import { ListaDesejosCard } from '../components/ListaDesejosCard'
@@ -15,11 +15,7 @@ export function ListasDesejos() {
         data={listasDesejos}
         keyExtractor={(item) => item.id.toString()}
         renderItem={(item) => (
-          <ListaDesejosCard
-            key={item.item.id}
-            titulo={item.item.nome}
-            totalDesejos={item.item.desejos.length}
-          />
+          <ListaDesejosCard key={item.item.id} listaId={item.item.id} />
         )}
         showsVerticalScrollIndicator={false}
         _contentContainerStyle={{
