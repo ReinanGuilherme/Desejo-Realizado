@@ -1,4 +1,5 @@
-import { createContext, ReactNode, useState } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { createContext, ReactNode, useEffect, useState } from 'react'
 import uuid from 'react-native-uuid'
 
 // Interfaces
@@ -80,6 +81,37 @@ export function ListaDesejosProvider({ children }: ListaDesejosProviderProps) {
     }
 
     return desejo
+  }
+
+  // Cuando se monta el componente, intenta cargar las listas desde AsyncStorage
+  useEffect(() => {
+    cargarListasStorage()
+  }, [])
+
+  // Cuando se actualiza listasDesejos, guarda las listas en AsyncStorage
+  useEffect(() => {
+    salvarListasEmStorage()
+  }, [listasDesejos])
+
+  async function cargarListasStorage() {
+    try {
+      const storedListas = await AsyncStorage.getItem('listasDesejos')
+      if (storedListas) {
+        // Si hay listas almacenadas en AsyncStorage, analízalas y configúralas en el estado
+        setListasDesejos(JSON.parse(storedListas))
+      }
+    } catch (error) {
+      console.error('Error al cargar las listas desde AsyncStorage:', error)
+    }
+  }
+
+  async function salvarListasEmStorage() {
+    try {
+      // Convierte listasDesejos a una cadena JSON antes de guardarla en AsyncStorage
+      await AsyncStorage.setItem('listasDesejos', JSON.stringify(listasDesejos))
+    } catch (error) {
+      console.error('Error al guardar las listas en AsyncStorage:', error)
+    }
   }
 
   return (

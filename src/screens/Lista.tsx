@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { FlatList, HStack, Image, ScrollView, VStack } from 'native-base'
+import { FlatList, VStack } from 'native-base'
 import {
   ListaDesejos,
   ListaDesejosContext,
@@ -32,9 +32,9 @@ export function Lista() {
   }, [listasDesejos, listaId])
 
   return (
-    <ScrollView>
+    <VStack flex={1}>
       <Header titulo={lista?.nome || ''} />
-      <VStack px={4} pb={5}>
+      <VStack px={4} pb={5} flex={1}>
         <FlatList
           data={lista?.desejos}
           keyExtractor={(desejo) => desejo.id.toString()}
@@ -58,6 +58,6 @@ export function Lista() {
 
         <Button title="Mais" onPress={handleRedirecionarParaDesejos} />
       </VStack>
-    </ScrollView>
+    </VStack>
   )
 }

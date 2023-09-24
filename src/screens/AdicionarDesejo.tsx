@@ -11,7 +11,7 @@ import { Input } from '../components/Input'
 import { TouchableOpacity } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 
-export function Desejos() {
+export function AdicionarDesejo() {
   const route: RouteProp<{ params: { listaId: number } }> = useRoute()
   const listaId = route.params?.listaId
 
@@ -50,7 +50,13 @@ export function Desejos() {
   }
 
   function handleAdicionarDesejo() {
-    const objDesejo = handleMontarDesejo(desejo, parseFloat(valor), urlImagem)
+    const formatarValor = valor.replace(',', '.')
+
+    const objDesejo = handleMontarDesejo(
+      desejo,
+      parseFloat(formatarValor),
+      urlImagem,
+    )
 
     handleAdicionarDesejoALista(listaId, objDesejo)
 

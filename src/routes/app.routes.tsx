@@ -10,7 +10,7 @@ import { Inicio } from '../screens/Inicio'
 import InicioSvg from '../assets/inicio.svg'
 import DesejoSvg from '../assets/desejo.svg'
 import { ListasDesejos } from '../screens/ListasDesejos'
-import { Desejos } from '../screens/Desejos'
+import { AdicionarDesejo } from '../screens/AdicionarDesejo'
 import { Lista } from '../screens/Lista'
 
 type AppRoutes = {
@@ -74,7 +74,7 @@ export function AppRoutes() {
 
       <Screen
         name="desejos"
-        component={Desejos}
+        component={AdicionarDesejo}
         options={{
           tabBarButton: () => null,
         }}
